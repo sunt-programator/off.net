@@ -20,4 +20,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Off.Net.Pdf.Core\Off.Net.Pdf.Core.csproj" />
+  </ItemGroup>
+
 </Project>

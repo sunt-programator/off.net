@@ -1,14 +1,12 @@
 namespace Off.Net.Pdf.Core.Primitives;
 
-using System.Diagnostics.CodeAnalysis;
 using Off.Net.Pdf.Core.Interfaces;
 
 /// <summary>
 /// Represents a PDF Boolean object.
 /// </summary>
 /// <seealso cref="IPdfObject{bool}" />
-[SuppressMessage("Minor Code Smell", "S1210:\"Equals\" and the comparison operators should be overridden when implementing \"IComparable\"", Justification = "Not required")]
-public struct PdfBoolean : IPdfObject<bool>, IComparable, IComparable<PdfBoolean>, IEquatable<PdfBoolean>
+public struct PdfBoolean : IPdfObject<bool>, IEquatable<PdfBoolean>
 {
     private const string FalseLiteral = "false";
     private const string TrueLiteral = "true";
@@ -75,49 +73,18 @@ public struct PdfBoolean : IPdfObject<bool>, IComparable, IComparable<PdfBoolean
     public static implicit operator bool(PdfBoolean pdfBoolean) => pdfBoolean.Value;
 
     /// <summary>
-    /// Performs an explicit conversion from <see cref="bool"/> to <see cref="PdfBoolean"/>.
+    /// Performs an implicit conversion from <see cref="bool"/> to <see cref="PdfBoolean"/>.
     /// </summary>
     /// <param name="value">if set to <c>true</c> [value].</param>
     /// <returns>The result of the conversion.</returns>
-    public static explicit operator PdfBoolean(bool value) => new PdfBoolean(value);
-    #endregion
-
-    #region Comparators
-    /// <inheritdoc/>
-    public int CompareTo(PdfBoolean booleanObject)
-    {
-        if (Value == booleanObject.Value)
-        {
-            return 0;
-        }
-
-        return Value ? 1 : -1;
-    }
-
-    /// <inheritdoc/>
-    public int CompareTo(object? obj)
-    {
-        if (obj == null)
-        {
-            return 1;
-        }
-
-        if (obj is PdfBoolean booleanObject)
-        {
-            return CompareTo(booleanObject);
-        }
-
-        throw new ArgumentException("The provided object is not a Boolean PDF primitive.");
-    }
+    public static implicit operator PdfBoolean(bool value) => new(value);
     #endregion
 
     #region Equality checking methods
-
     /// <inheritdoc/>
-    public bool Equals(PdfBoolean booleanObject) => Value == booleanObject.Value;
+    public bool Equals(PdfBoolean other) => Value == other.Value;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => (obj is PdfBoolean booleanObject) && Equals(booleanObject);
     #endregion
-
 }
