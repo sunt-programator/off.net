@@ -53,7 +53,7 @@ public struct PdfBoolean : IPdfObject<bool>, IEquatable<PdfBoolean>
     /// <returns>
     /// The result of the operator.
     /// </returns>
-    public static bool operator !=(PdfBoolean leftOperator, PdfBoolean rightOperator) => !(leftOperator == rightOperator);
+    public static bool operator !=(PdfBoolean leftOperator, PdfBoolean rightOperator) => !leftOperator.Equals(rightOperator);
 
     /// <summary>
     /// Implements the operator ==.

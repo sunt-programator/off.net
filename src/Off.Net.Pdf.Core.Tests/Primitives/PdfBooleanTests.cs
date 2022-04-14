@@ -5,6 +5,18 @@ namespace Off.Net.Pdf.Core.Tests.Primitives;
 
 public class PdfBooleanTests
 {
+    [Fact(DisplayName = "Ensure that the parameterless constructor will set false to the Value property.")]
+    public void PdfBoolean_ParameterlessConstructor_ShouldSetFalseToValueProperty()
+    {
+        // Arrange
+        PdfBoolean pdfBoolean1 = new PdfBoolean();
+
+        // Act
+
+        // Assert
+        Assert.False(pdfBoolean1.Value);
+    }
+
     [Theory(DisplayName = "Create a instance using parametrized constructor and check the Value property")]
     [InlineData(true)]
     [InlineData(false)]
@@ -118,5 +130,20 @@ public class PdfBooleanTests
 
         // Assert
         Assert.Equal(expectedResult, actualResult);
+    }
+
+    [Theory(DisplayName = "Check if Bytes property returns valid data")]
+    [InlineData(true, new byte[] { 0x74, 0x72, 0x75, 0x65 })]
+    [InlineData(false, new byte[] { 0x66, 0x61, 0x6C, 0x73, 0x65 })]
+    public void PdfBoolean_Bytes_CheckValidity(bool value1, byte[] expectedBytes)
+    {
+        // Arrange
+        PdfBoolean pdfBoolean1 = value1; // Use an implicit conversion from bool to PdfBoolean
+
+        // Act
+        byte[] actualBytes = pdfBoolean1.Bytes;
+
+        // Assert
+        Assert.Equal(expectedBytes, actualBytes);
     }
 }
