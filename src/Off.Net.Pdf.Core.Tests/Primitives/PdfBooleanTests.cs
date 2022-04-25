@@ -32,24 +32,6 @@ public class PdfBooleanTests
         Assert.Equal(expectedValue, pdfBoolean.Value);
     }
 
-    [Theory(DisplayName = "Create a instance using parameterless constructor and check the Value property")]
-    [InlineData(true)]
-    [InlineData(false)]
-    public void PdfBoolean_ParameterlessContructor_CheckValue(bool value)
-    {
-        // Arrange
-        PdfBoolean pdfBoolean = new()
-        {
-            Value = value
-        };
-
-        // Act
-        bool expectedValue = pdfBoolean; // Use an implicit conversion from PdfBoolean to bool
-
-        // Assert
-        Assert.Equal(expectedValue, pdfBoolean.Value);
-    }
-
     [Theory(DisplayName = "Check the length of the PDF boolean primitive")]
     [InlineData(true, 4)]
     [InlineData(false, 5)]
@@ -145,5 +127,20 @@ public class PdfBooleanTests
 
         // Assert
         Assert.Equal(expectedBytes, actualBytes);
+    }
+
+    [Theory(DisplayName = "Check if GetHashCode method returns valid value")]
+    [InlineData(false, 0)]
+    [InlineData(true, 1)]
+    public void PdfBoolean_GetHashCode_CheckValidity(bool value1, int expectedHashCode)
+    {
+        // Arrange
+        PdfBoolean pdfBoolean1 = value1; // Use an implicit conversion from bool to PdfBoolean
+
+        // Act
+        int actualHashCode = pdfBoolean1.GetHashCode();
+
+        // Assert
+        Assert.Equal(expectedHashCode, actualHashCode);
     }
 }

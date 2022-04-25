@@ -10,10 +10,10 @@ public interface IPdfObject<T>
     /// <summary>
     /// Gets or sets the value of the object.
     /// </summary>
-    T Value { get; set; }
+    T Value { get; }
 
     /// <summary>
-    /// Gets the bytes array representation of the Pdf object. 
+    /// Gets the bytes array representation of the Pdf object.
     /// </summary>
     byte[] Bytes { get; }
 }

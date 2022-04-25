@@ -33,7 +33,7 @@ public struct PdfBoolean : IPdfObject<bool>, IEquatable<PdfBoolean>
     public int Length => ToString().Length;
 
     /// <inheritdoc/>
-    public bool Value { get; set; }
+    public bool Value { get; }
 
     /// <inheritdoc/>
     public byte[] Bytes => Value ? TrueBytes : FalseBytes;
