@@ -1,0 +1,55 @@
+name: .NET
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        dotnet-version: ["6.0.x"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET SDK ${{ matrix.dotnet-version }} on ${{ matrix.operating-system }}
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+  mutation-testing:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Run Mutation testing
+        run: dotnet tool run dotnet-stryker
+          --config-file "./stryker-config.json"
+          --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_APIKEY }}
+          --version ${{ github.ref_name }}
+      - name: Run Mutation testing for PR
+        if: ${{ github.event_name == 'pull_request' }}
+        run: dotnet tool run dotnet-stryker
+          --config-file "./stryker-config.json"
+          --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_APIKEY }}
+          --with-baseline:${{ github.base_ref }}
+          --version ${{ github.head_ref }}
