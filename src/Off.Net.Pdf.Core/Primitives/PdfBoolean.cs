@@ -1,5 +1,6 @@
 namespace Off.Net.Pdf.Core.Primitives;
 
+using System.Text;
 using Off.Net.Pdf.Core.Interfaces;
 
 /// <summary>
@@ -10,8 +11,8 @@ public struct PdfBoolean : IPdfObject<bool>, IEquatable<PdfBoolean>
 {
     private const string FalseLiteral = "false";
     private const string TrueLiteral = "true";
-    private static readonly byte[] FalseBytes = new byte[] { 0x66, 0x61, 0x6C, 0x73, 0x65 };
-    private static readonly byte[] TrueBytes = new byte[] { 0x74, 0x72, 0x75, 0x65 };
+    private static readonly byte[] FalseBytes = Encoding.ASCII.GetBytes(FalseLiteral);
+    private static readonly byte[] TrueBytes = Encoding.ASCII.GetBytes(TrueLiteral);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PdfBoolean"/> struct.

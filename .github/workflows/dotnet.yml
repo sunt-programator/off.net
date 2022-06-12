@@ -42,6 +42,7 @@ jobs:
       - name: Restore tools
         run: dotnet tool restore
       - name: Run Mutation testing
+        if: ${{ github.event_name == 'push' }}
         run: dotnet tool run dotnet-stryker
           --config-file "./stryker-config.json"
           --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_APIKEY }}

@@ -3,11 +3,11 @@
     "reporters": ["progress", "cleartext", "dashboard"],
     "project-info": {
       "name": "github.com/sunt-programator/off.net",
-      "version": "master"
+      "version": "main"
     },
     "project": "Off.Net.Pdf.Core.csproj",
     "test-projects": [
-      "./src/Off.Net.Pdf.Core.Tests/Off.Net.Pdf.Core.Tests.csproj"
+      "./tests/Off.Net.Pdf.Core.Tests/Off.Net.Pdf.Core.Tests.csproj"
     ]
   }
 }
