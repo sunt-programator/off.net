@@ -1,6 +1,7 @@
 {
   "stryker-config": {
     "reporters": ["progress", "cleartext", "dashboard"],
+    "since": { "target": "main" },
     "project-info": {
       "name": "github.com/sunt-programator/off.net",
       "version": "main"

@@ -6,16 +6,29 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ${{ matrix.operating-system }}
+    timeout-minutes: 10
     strategy:
       matrix:
-        operating-system: [ubuntu-latest]
+        operating-system: [ubuntu-latest, windows-latest, macOS-latest]
         dotnet-version: ["6.0.x"]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache NuGet modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
       - name: Setup .NET SDK ${{ matrix.dotnet-version }} on ${{ matrix.operating-system }}
         uses: actions/setup-dotnet@v2
         with:
@@ -28,9 +41,18 @@ jobs:
         run: dotnet test --no-build --verbosity normal
   mutation-testing:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache NuGet modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v2
         with:
@@ -42,15 +64,7 @@ jobs:
       - name: Restore tools
         run: dotnet tool restore
       - name: Run Mutation testing
-        if: ${{ github.event_name == 'push' }}
         run: dotnet tool run dotnet-stryker
           --config-file "./stryker-config.json"
           --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_APIKEY }}
-          --version ${{ github.ref_name }}
-      - name: Run Mutation testing for PR
-        if: ${{ github.event_name == 'pull_request' }}
-        run: dotnet tool run dotnet-stryker
-          --config-file "./stryker-config.json"
-          --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_APIKEY }}
-          --with-baseline:${{ github.base_ref }}
-          --version ${{ github.head_ref }}
+          --version ${{ github.head_ref || github.ref_name }}
